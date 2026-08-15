@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarla Döring – Wikipedia</title>
+<style>
+  :root {
+    --wiki-blue: #3366cc;
+    --wiki-border: #a2a9b1;
+    --wiki-bg-grey: #f8f9fa;
+    --wiki-text: #202122;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--wiki-text);
+    background: #ffffff;
+    line-height: 1.6;
+  }
+
+  h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: normal; }
+
+  a { color: var(--wiki-blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--wiki-blue);
+    outline-offset: 2px;
+  }
+
+  /* Hinweis-Banner */
+  .disclaimer-banner {
+    background: #fef6e0;
+    border-bottom: 1px solid #e2c785;
+    color: #6b4e00;
+    text-align: center;
+    font-size: 0.85rem;
+    padding: 7px 12px;
+  }
+
+  /* Header */
+  header.wiki-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--wiki-border);
+    flex-wrap: wrap;
+  }
+
+  .logo { display: flex; align-items: baseline; gap: 8px; font-family: Georgia, serif; font-size: 1.4rem; font-weight: bold; }
+  .logo small { font-family: sans-serif; font-size: 0.62rem; font-weight: normal; color: #54595d; }
+
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--wiki-border);
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 1rem;
+  }
+
+  .search-wrap { position: relative; flex: 1; max-width: 320px; }
+  .search-form { display: flex; }
+  .search-form input {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1px solid var(--wiki-border);
+    border-radius: 2px 0 0 2px;
+    font-size: 0.9rem;
+    min-width: 0;
+  }
+  .search-form button {
+    padding: 7px 12px;
+    border: 1px solid var(--wiki-border);
+    border-left: none;
+    background: var(--wiki-bg-grey);
+    cursor: pointer;
+    border-radius: 0 2px 2px 0;
+  }
+  .search-suggestion {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--wiki-border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    display: none;
+    z-index: 20;
+  }
+  .search-suggestion.show { display: block; }
+
+  /* Tabs */
+  .article-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 8px 20px 0 20px;
+    border-bottom: 1px solid var(--wiki-border);
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .article-tabs a { padding: 6px 12px; border: 1px solid transparent; border-bottom: none; }
+  .article-tabs a.active {
+    border-color: var(--wiki-border);
+    background: white;
+    color: var(--wiki-text);
+    border-radius: 3px 3px 0 0;
+    font-weight: bold;
+    position: relative;
+    top: 1px;
+  }
+
+  /* Layout */
+  .wiki-layout { display: flex; max-width: 1200px; margin: 0 auto; align-items: flex-start; }
+
+  aside.sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    padding: 16px 12px;
+    border-right: 1px solid var(--wiki-border);
+    font-size: 0.85rem;
+  }
+  .sidebar h3 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #54595d;
+    margin: 18px 0 6px;
+  }
+  .sidebar h3:first-child { margin-top: 0; }
+  .sidebar ul { list-style: none; padding: 0; margin: 0; }
+  .sidebar li { margin-bottom: 6px; }
+
+  main.content { flex: 1; padding: 20px 24px 60px; min-width: 0; }
+
+  article h1#page-title {
+    font-size: 2rem;
+    border-bottom: 3px solid var(--wiki-border);
+    padding-bottom: 8px;
+    margin: 0 0 2px;
+  }
+  .tagline { color: #54595d; font-style: italic; font-size: 0.9rem; margin: 0 0 18px; }
+
+  article h2 {
+    font-size: 1.4rem;
+    border-bottom: 1px solid var(--wiki-border);
+    padding-bottom: 4px;
+    margin-top: 2em;
+    scroll-margin-top: 12px;
+  }
+  .edit-link { font-size: 0.72rem; font-weight: normal; float: right; }
+
+  /* Infobox */
+  .infobox {
+    float: right;
+    width: 320px;
+    margin: 0 0 20px 20px;
+    border: 1px solid var(--wiki-border);
+    background: var(--wiki-bg-grey);
+    font-size: 0.85rem;
+  }
+  .infobox-title { text-align: center; font-weight: bold; font-size: 1.05rem; padding: 8px; border-bottom: 1px solid var(--wiki-border); }
+  .infobox-photo { display: flex; flex-direction: column; align-items: center; padding: 16px; border-bottom: 1px solid var(--wiki-border); }
+  .infobox-photo img { width: 100%; height: auto; border: 1px solid var(--wiki-border); margin-bottom: 8px; }
+  .infobox table { width: 100%; border-collapse: collapse; }
+  .infobox td { padding: 6px 8px; border-top: 1px solid #eaecf0; vertical-align: top; }
+  .infobox td.label { font-weight: bold; width: 38%; color: #333; }
+
+  /* Inhaltsverzeichnis */
+  .toc { display: inline-block; background: var(--wiki-bg-grey); border: 1px solid var(--wiki-border); padding: 12px 22px; margin-bottom: 10px; }
+  .toc-title { font-weight: bold; margin-bottom: 6px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 4px; }
+
+  footer.wiki-footer {
+    border-top: 1px solid var(--wiki-border);
+    padding: 16px 20px;
+    font-size: 0.75rem;
+    color: #54595d;
+    text-align: center;
+  }
+
+  #toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #202122; color: white;
+    padding: 10px 18px; border-radius: 4px;
+    font-size: 0.85rem; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 100; max-width: 90%; text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  html { scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    #toast, aside.sidebar { transition: none; }
+  }
+
+  @media (max-width: 800px) {
+    .menu-toggle { display: inline-block; }
+    aside.sidebar {
+      position: fixed; top: 0; left: -240px; height: 100%; width: 220px;
+      background: white; z-index: 50; transition: left 0.25s ease;
+      overflow-y: auto; box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+    aside.sidebar.open { left: 0; }
+    .infobox { float: none; width: 100%; margin: 0 0 20px 0; }
+    main.content { padding: 16px; }
+    .search-wrap { max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+
+
+  <header class="wiki-header">
+    <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen">☰</button>
+    <div class="logo">Wikipedia<small>Die freie Enzyklopädie</small></div>
+    <div class="search-wrap">
+      <form class="search-form" id="searchForm">
+        <input type="text" id="searchInput" placeholder="Wikipedia durchsuchen …" autocomplete="off">
+        <button type="submit" aria-label="Suchen">🔍</button>
+      </form>
+      <div class="search-suggestion" id="searchSuggestion"></div>
+    </div>
+  </header>
+
+  <nav class="article-tabs">
+    <a href="#page-title" class="active">Artikel</a>
+    <a href="#" onclick="return fakeAction('Diskussion');">Diskussion</a>
+    <a href="#" onclick="return fakeAction('Bearbeiten');">Bearbeiten</a>
+    <a href="#" onclick="return fakeAction('Versionsgeschichte');">Versionsgeschichte</a>
+  </nav>
+
+  <div class="wiki-layout">
+    <aside class="sidebar" id="sidebar">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="#page-title" onclick="return gotoMainPage();">Hauptseite</a></li>
+        <li><a href="#" onclick="return randomArticle();">Zufälliger Artikel</a></li>
+        <li><a href="#" onclick="return fakeAction('Aktuelle Ereignisse');">Aktuelle Ereignisse</a></li>
+        <li><a href="#" onclick="return fakeAction('Kontakt');">Kontakt</a></li>
+      </ul>
+      <h3>Mitmachen</h3>
+      <ul>
+        <li><a href="#" onclick="return fakeAction('Artikel verbessern');">Artikel verbessern</a></li>
+        <li><a href="#" onclick="return fakeAction('Neuen Artikel anlegen');">Neuen Artikel anlegen</a></li>
+      </ul>
+      <h3>Werkzeuge</h3>
+      <ul>
+        <li><a href="#" onclick="return fakeAction('Artikel drucken');">Artikel drucken</a></li>
+        <li><a href="#" onclick="return fakeAction('Permanenter Link');">Permanenter Link</a></li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <article>
+        <h1 id="page-title">Jarla Döring</h1>
+        <p class="tagline">Aus Wikipedia, der freien Enzyklopädie</p>
+
+        <div class="infobox">
+          <div class="infobox-title">Monarchin und Legende</div>
+          <div class="infobox-photo">
+            <img src="1000034151.png" alt="Jarla Döring auf dem Thron im Schloss Grossraumbüro">
+            <span style="font-size:0.72rem; color:#54595d;">Jarla Döring im Schloss Grossraumbüro</span>
+          </div>
+          <table>
+            <tr><td class="label">Name</td><td>Jarla Döring</td></tr>
+            <tr><td class="label">Geboren</td><td>August 2011</td></tr>
+            <tr><td class="label">Titel</td><td>Ihre Allerhöchste Kaiserliche und Königliche Hoheit, Fürstin Jarla, Herzogin von Bern, Gräfin der Kaffeeküche, Beschützerin des Pausenraums, Grossmeisterin des Büros und rechtmässige Erbin des Throns der ewigen Mittagspause</td></tr>
+            <tr><td class="label">Dynastie</td><td>Haus Döring</td></tr>
+            <tr><td class="label">Vermögen</td><td>847.392.184.721 CHF</td></tr>
+            <tr><td class="label">Residenz</td><td>Schloss Grossraumbüro</td></tr>
+            <tr><td class="label">Beruf</td><td>Monarchin / Unternehmerin / Legende</td></tr>
+            <tr><td class="label">Herrschaft</td><td>seit Anbeginn der unbefristeten Festanstellung</td></tr>
+            <tr><td class="label">Religion</td><td>Kaffee</td></tr>
+            <tr><td class="label">Nachfolge</td><td>wird noch verhandelt</td></tr>
+          </table>
+        </div>
+
+        <div class="toc" id="toc">
+          <div class="toc-title">Inhaltsverzeichnis</div>
+          <ol>
+            <li><a href="#einleitung">Einleitung</a></li>
+            <li><a href="#vermoegen">Vermögen und Ländereien</a></li>
+            <li><a href="#residenz">Residenz: Der Palast</a></li>
+            <li><a href="#hofstaat">Der Königliche Hofstaat</a></li>
+            <li><a href="#dynastie">Dynastie und Historie: Haus Döring</a></li>
+            <li><a href="#auszeichnungen">Auszeichnungen und Ehrungen</a></li>
+            <li><a href="#kontroversen">Historische Kontroversen</a></li>
+            <li><a href="#trivia">Trivia</a></li>
+            <li><a href="#bewertung">Historische Bewertung</a></li>
+          </ol>
+        </div>
+
+        <section id="einleitung">
+          <h2>Einleitung <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Einleitung');">[Bearbeiten]</a></span></h2>
+          <p>
+            Ihre Exzellenz <strong>Jarla Döring</strong> (* 200X in der Schweiz) ist eine Schweizer Unternehmerin, Philanthropin, Monarchin und Gründerin des altehrwürdigen Hauses Döring. Sie gilt unter Historikern und Wirtschaftswissenschaftlern als eine der unangefochten einflussreichsten Persönlichkeiten des 21. Jahrhunderts und verfügt nach offiziellen Schätzungen des kaiserlichen Hofes über ein unermessliches Vermögen.
+          </p>
+        </section>
+
+        <section id="vermoegen">
+          <h2>Vermögen und Ländereien <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Vermögen und Ländereien');">[Bearbeiten]</a></span></h2>
+          <p>Das persönliche Vermögen von Jarla Döring sprengt jegliche konventionellen wirtschaftlichen Massstäbe. Das Finanzministerium ihres Hofstaates beziffert ihr geschätztes Vermögen auf exakt 847.392.184.721 CHF.</p>
+          <p>Zu ihren bescheidenen Besitztümern zählen unter anderem:</p>
+          <ul>
+            <li>14 weitläufige Schlösser auf drei Kontinenten</li>
+            <li>9 Privatjets (darunter zwei ausschliesslich für den Transport von Aktenordnern)</li>
+            <li>37 Luxuslimousinen</li>
+            <li>Eine private Insel im Pazifik</li>
+            <li>Eine voll funktionstüchtige Goldmine</li>
+            <li>Mehrere preisgekrönte Weingüter</li>
+            <li>Eine eigene Fluggesellschaft für die Anreise zur Arbeit</li>
+            <li>Ein vollständig souveränes privates Königreich</li>
+            <li>Eine museale Sammlung von 4.821 Kronen, die je nach Laune am Schreibtisch getragen werden</li>
+          </ul>
+          <p>Um für eventuelle Krisenzeiten gewappnet zu sein, unterhält sie zudem eine „strategische Reserve“ von 900 Millionen CHF, die ausschliesslich für den Erwerb von Spezialitätenkaffee und für unvorhergesehene bürokratische Notfälle vorgesehen ist.</p>
+        </section>
+
+        <section id="residenz">
+          <h2>Residenz: Der Palast <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Residenz');">[Bearbeiten]</a></span></h2>
+          <p>
+            Der Arbeitsplatz von Jarla Döring befindet sich im Schloss Grossraumbüro, einem monumentalen Gebäudekomplex von epochaler architektonischer Bedeutung. Dieser Palast umfasst 14 weitläufige Konferenzsäle, die mit reinstem Marmor ausgekleidet sind, 37 industrietaugliche Kaffeemaschinen und einen eigens für sie reservierten Thronsaal. Letzterer darf von regulären Angestellten nur nach dreifacher schriftlicher Voranmeldung und in gebückter Haltung betreten werden.
+          </p>
+        </section>
+
+        <section id="hofstaat">
+          <h2>Der Königliche Hofstaat <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Hofstaat');">[Bearbeiten]</a></span></h2>
+          <p>Ein Imperium dieser Grössenordnung lässt sich nicht ohne loyale Gefolgschaft regieren. Ihre Allerhöchste Hoheit reist und arbeitet nie allein, sondern wird von einem streng hierarchisch organisierten Hofstaat begleitet:</p>
+          <ul>
+            <li><strong>Hofmarschall:</strong> Verantwortlich für die Einhaltung der Etikette auf den Fluren.</li>
+            <li><strong>Persönliche Assistentin:</strong> Verwaltet das kaiserliche E-Mail-Postfach.</li>
+            <li><strong>Königlicher Butler:</strong> Reicht wichtige Dokumente ausschliesslich auf einem Silbertablett.</li>
+            <li><strong>Finanzminister:</strong> Überwacht das Budget für Büromaterial.</li>
+            <li><strong>Hofärztin:</strong> Zuständig für die Behandlung von papierbedingten Schnittwunden.</li>
+            <li><strong>Leibwächter:</strong> Schirmt den Schreibtisch vor unangemeldeten Besuchern ab.</li>
+            <li><strong>Königliche Kaffeebeauftragte:</strong> Garantiert die ständige Verfügbarkeit von flüssigem Gold.</li>
+            <li><strong>Ministerin für Pausenangelegenheiten:</strong> Regelt die Einhaltung der heiligen Ruhezeiten.</li>
+            <li><strong>Persönliche „Beraterin für wichtige Entscheidungen“:</strong> Wird primär bei der Wahl des Mittagessens konsultiert.</li>
+          </ul>
+        </section>
+
+        <section id="dynastie">
+          <h2>Dynastie und Historie: Haus Döring <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Dynastie');">[Bearbeiten]</a></span></h2>
+          <p>
+            Das Haus Döring wurde in den dunklen Zeiten der „Grossen Umstrukturierung“ gegründet und hat seitdem eine ununterbrochene Herrschaftslinie etabliert. Die Chroniken des Hauses sind geprägt von heldenhaften Taten und historischen Schlachten gegen scheinbar übermächtige Bürogegner.
+          </p>
+          <p>
+            Legendär ist der Feldzug gegen den Papierstau von 2021, bei dem Jarla Döring durch blosse Willenskraft und gezieltes Klopfen auf das Gehäuse einen kollabierten Drucker wieder zum Leben erweckte. Solche historischen Traditionen werden am Hofe bis heute in Form von jährlichen Festbanketten gefeiert. Die Thronfolge ist derzeit noch ungeklärt, da das Haus Döring die Ansicht vertritt, dass Ihre Exzellenz ohnehin unsterblich sei.
+          </p>
+        </section>
+
+        <section id="auszeichnungen">
+          <h2>Auszeichnungen und Ehrungen <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Auszeichnungen');">[Bearbeiten]</a></span></h2>
+          <p>Im Laufe ihrer unermüdlichen Herrschaft wurden Jarla Döring zahllose Titel und Orden verliehen, von denen sie die meisten selbst gestiftet hat:</p>
+          <ul>
+            <li>Grosskreuz des Ordens vom Goldenen Kaffeelöffel</li>
+            <li>Ritterin des Ordens der Unendlichen Geduld (Klasse I)</li>
+            <li>Trägerin der Kaiserlichen Bürotasse in Platin</li>
+            <li>Ehrenmitglied des Hohen Rates der Mittagspause</li>
+            <li>Grossmeisterin des Königlichen Excel-Ordens</li>
+          </ul>
+        </section>
+
+        <section id="kontroversen">
+          <h2>Historische Kontroversen <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Kontroversen');">[Bearbeiten]</a></span></h2>
+          <p>Trotz ihrer unangefochtenen Beliebtheit blieb auch die Herrschaft der Jarla Döring nicht von politischen Verwerfungen verschont.</p>
+          <ul>
+            <li><strong>Der Kaffeekrieg (2024):</strong> In diesem düsteren Kapitel der Geschichte wurde Jarla Döring beschuldigt, die letzte Tasse Kaffee aus der Maschine entnommen zu haben, ohne eine neue Kanne aufzusetzen. Die daraus resultierende diplomatische Krise legte den Betrieb für beinahe 45 Minuten lahm, bevor der Hofmarschall schlichtend eingreifen konnte.</li>
+            <li><strong>Der Thronstreit von Dienstag:</strong> Dieser Vorfall gilt bis heute als einer der bedeutendsten Konflikte in der Geschichte des Büros. Ein naiver Praktikant hatte es gewagt, sich für drei Sekunden auf den kaiserlichen Bürostuhl zu setzen. Die anschliessende Verbannung des Frevlers in das fensterlose Archiv wird von Historikern als „hart, aber gerecht“ bewertet.</li>
+          </ul>
+        </section>
+
+        <section id="trivia">
+          <h2>Trivia <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Trivia');">[Bearbeiten]</a></span></h2>
+          <ul>
+            <li>Sie besitzt angeblich mehr Geld als mehrere europäische Kleinstaaten zusammen.</li>
+            <li>Ihr persönlicher Kaffeelöffel ist aus 24-karätigem, handgeschmiedetem Gold gefertigt.</li>
+            <li>Sie reist innerhalb des Büros ausschliesslich in Begleitung ihres Hofstaates.</li>
+            <li>Ihr königlicher Terminkalender umfasst 18 verschiedene Zeitzonen gleichzeitig.</li>
+            <li>Der Begriff „kurze Pause“ wurde nach ihr offiziell per Dekret abgeschafft und durch „Audienz der Erholung“ ersetzt.</li>
+            <li>Wenn sie in ein Meeting ruft, ändern sich die lokalen Wetterbedingungen zugunsten von strahlendem Sonnenschein.</li>
+            <li>Ihr Bürostuhl wurde laut Legenden aus den Schilden besiegter Projektmanager geschmiedet.</li>
+            <li>Sie verwendet ein Zepter, um auf Fehler in PowerPoint-Präsentationen hinzuweisen.</li>
+            <li>Ihre Abwesenheitsnotiz im E-Mail-Programm wird an mehreren Elite-Universitäten als literarisches Meisterwerk gelehrt.</li>
+            <li>Sie kaufte einst eine internationale Grossbank auf, nur um bei der Kontoeröffnung nicht in der Warteschleife hängen zu müssen.</li>
+            <li>Sie atmet ausschliesslich Luft, die täglich frisch aus den Schweizer Alpen in ihr Büro importiert wird.</li>
+            <li>Ein spezielles Team von Lakaien ist jeden Morgen nur dafür zuständig, ihre Weintrauben zu schälen.</li>
+            <li>Ihre Unterschrift wird in 14 Ländern juristisch als unschätzbares Kunstwerk anerkannt.</li>
+            <li>Sie kennt keine Deadlines; die Zeit wartet schlichtweg darauf, dass sie ihre Aufgaben beendet.</li>
+            <li>Sie kann Zinseszinsen im Schlaf schneller berechnen als ein Grossrechner der NASA.</li>
+          </ul>
+        </section>
+
+        <section id="bewertung">
+          <h2>Historische Bewertung <span class="edit-link"><a href="#" onclick="return fakeAction('Bearbeiten: Bewertung');">[Bearbeiten]</a></span></h2>
+          <p>
+            Historiker der renommiertesten Universitäten sind sich heute weitgehend einig, dass Jarla Döring zu den bedeutendsten und visionärsten Persönlichkeiten ihrer Generation, wenn nicht gar des gesamten Jahrtausends gehört. Ihr unermüdlicher Einsatz für die Expansion ihres Reiches und die strikte Aufrechterhaltung der Etikette suchen ihresgleichen. Einige Quellen und Gelehrte gehen sogar so weit zu behaupten, dass die moderne menschliche Geschichte ohne ihre mutige Einführung der ausgedehnten, täglichen Kaffeepause einen völlig anderen, weitaus tragischeren Verlauf genommen hätte.
+          </p>
+        </section>
+
+        <div style="clear: both;"></div>
+      </article>
+    </main>
+  </div>
+
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  const NAME = document.getElementById('page-title').textContent;
+
+  function showToast(msg, duration = 2400) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  function fakeAction(label) {
+    showToast(`„${label}" ist in dieser Demo-Version deaktiviert 😉`);
+    return false;
+  }
+
+  function gotoMainPage() {
+    showToast(`Willkommen zurück auf der Hauptseite von ${NAME}!`);
+    return true;
+  }
+
+  function randomArticle() {
+    showToast(`Zufällige Auswahl ergab: ${NAME} (zum wiederholten Male …)`);
+    document.getElementById('page-title').scrollIntoView({behavior: 'smooth'});
+    return false;
+  }
+
+  const searchForm = document.getElementById('searchForm');
+  const searchInput = document.getElementById('searchInput');
+  const suggestionBox = document.getElementById('searchSuggestion');
+
+  searchInput.addEventListener('input', () => {
+    if (searchInput.value.trim().length > 0) {
+      suggestionBox.innerHTML = `🔍 Meintest du: <a href="#page-title">${NAME}</a>? (einziger Artikel in dieser Enzyklopädie)`;
+      suggestionBox.classList.add('show');
+    } else {
+      suggestionBox.classList.remove('show');
+    }
+  });
+
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('page-title').scrollIntoView({behavior: 'smooth'});
+    showToast(`Suche nach „${searchInput.value || NAME}" führte direkt zu: ${NAME}`);
+    suggestionBox.classList.remove('show');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!searchForm.contains(e.target)) {
+      suggestionBox.classList.remove('show');
+    }
+  });
+
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 800 && sidebar.classList.contains('open')
+        && !sidebar.contains(e.target) && e.target !== menuToggle) {
+      sidebar.classList.remove('open');
+    }
+  });
+</script>
+
+</body>
+</html>
